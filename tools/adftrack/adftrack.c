@@ -13,12 +13,14 @@ struct FileEntry
 {
 	char*	filename;		// the filename
 	int		startoffset;	// the starting offset on disk in bytes
+	int		startblock;     // the starting offset on disk in blocks
 	int		numblocks;		// the amount of blocks/sectors the file occupies on disk.
 
 	FileEntry()
 	{
 		filename=0;
 		startoffset=-1;
+		startblock=-1;
 		numblocks=0;
 	}
 	
@@ -26,6 +28,7 @@ struct FileEntry
 	{
 		this->filename=filename;
 		this->startoffset=-1;
+		this->startblock=-1;
 		this->numblocks=0;
 	}
 };
@@ -99,11 +102,13 @@ void AddFile( FileEntry& fileentry, unsigned char* buf, int& fileoffset )
 		exit(-1);
 	}
 
+	int filesize_padded_to_blocks = 512*((filesize/512)+1);
+
 	// add padding to be 32 bit aligned
-	int filesizepad=(filesize+3) & 0xfffffffc;
+	// int filesizepad=(filesize+3) & 0xfffffffc;
 
 	// does the file fit onto the disk?
-	int fileendoffset=fileoffset+filesizepad;
+	int fileendoffset=fileoffset+filesize_padded_to_blocks;
 	int freespace=901120-fileendoffset;
 	if (freespace<0)
 	{
@@ -112,12 +117,13 @@ void AddFile( FileEntry& fileentry, unsigned char* buf, int& fileoffset )
 	}
 
 	// alloc mem and read file
-	unsigned char* buf2=new unsigned char[filesize];
+	unsigned char* buf2=new unsigned char[filesize_padded_to_blocks];
+	memset(buf2, 0, filesize_padded_to_blocks);
 
 	fread(buf2, 1, filesize, filer);
 
 	// write the file into the filebuf
-	memcpy(buf+fileoffset, buf2, filesize);
+	memcpy(buf+fileoffset, buf2, filesize_padded_to_blocks);
 
 	cout << "free space: " << freespace << endl;
 	
@@ -128,6 +134,7 @@ void AddFile( FileEntry& fileentry, unsigned char* buf, int& fileoffset )
 
 	// write info to the file-struct
 	fileentry.startoffset=fileoffset;
+	fileentry.startblock=fileoffset/512;
 	fileentry.numblocks=numblocks;
 	
 	// free mem and close file
@@ -147,13 +154,14 @@ int main(int argc, char **argv)
 	// if not enough params, show usage info
 	if(argc < 3) 
 	{
-		printf("usage %s <bootblock> <outfile> [n <filenames>]\n", argv[0]);
+		printf("usage %s <bootblock> <outfile> <mapfile> [n <filenames>]\n", argv[0]);
         exit(-1);
 	}
 
 	// get bootblock and adf filenames from commandline
 	const char* bootname=argv[1];
 	const char* filewname=argv[2];
+	const char* mapname=argv[3];
 
 	// open file containing bootblock
 	FILE* bootfile=fopen(bootname, "rb");
@@ -189,11 +197,11 @@ int main(int argc, char **argv)
 	// get all input-files from the commandline and add them to the filestruct-list
 	vector<FileEntry> files;
 
-	int numfiles = argc - 3;
+	int numfiles = argc - 4;
 
 	for (int i=0 ; i<numfiles ; i++)
 	{
-		files.push_back((char*)argv[ i + 3 ]);
+		files.push_back((char*)argv[ i + 4 ]);
 	}
 
 	// reserve the first 3 sectors of the diskbuffer for bootblock and our directory
@@ -214,11 +222,26 @@ int main(int argc, char **argv)
 
 	int* mydirpoi=mydirsector;
 
+	// open file containing bootblock
+	FILE* mapfile=fopen(mapname, "w+");
+	if(!mapfile) 
+	{
+		printf("cannot open \"%s\"\n", mapname);
+		exit(-1);
+	}
+
 	for (int i=0 ; i<numfiles ; i++)
 	{
-		*mydirpoi++=(files[i].startoffset);
+		*mydirpoi++=(files[i].startblock);
 		*mydirpoi++=files[i].numblocks;
+		fprintf(mapfile, "%s_sblock = %d\n", files[i].filename, files[i].startblock);
+		fprintf(mapfile, "%s_nblock = %d\n", files[i].filename, files[i].numblocks);
+
+		printf("%s_sblock = %d\n", files[i].filename, files[i].startblock);
+		printf("%s_nblock = %d\n", files[i].filename, files[i].numblocks);
 	}
+
+	fclose(mapfile);
 
 	// correct endianess of the buffer
 	BSwapIntArray((unsigned int*)(mydirsector), 128);

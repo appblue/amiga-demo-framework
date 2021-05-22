@@ -1,17 +1,20 @@
 #!/bin/bash
 
-# errors enc execution
-set -x
+# any error will halt the execution
+set -e
 
 (cd demo/bootblock; ./make.sh)
 (cd demo/copper; ./make.sh)
 (cd demo/driver; ./make.sh)
 
 ./tools/adftrack/adftrack \
-    ./demo/bootblock/bootblock \
-    demo.adf \
-    ./demo/driver/driver \
-    ./demo/copper/copper
+    ./demo/bootblock/bootblock \  # bootblock
+    demo.adf \                    # target ADF file
+    map.i \                       # maping files -> (start_block, size_in_block)
+   ./demo/driver/driver \         # first block of data/code
+    ./demo/copper/copper          # second block of data/code
+
+[ $? -ne 0 ] && exit
 
 FS_EXEC=/bin/fs-uae
 SYSTEM=$(uname -s)
