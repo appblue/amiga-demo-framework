@@ -1,5 +1,5 @@
 /*
-Lempel-Ziv compressor by Johan "Doynax" Forslöf.
+Lempel-Ziv compressor by Johan "Doynax" Forslï¿½f.
 
 This is based on the 6502 Doynamite format, except with the encoding rearranged to take
 somewhat better advantage of the 68k architecture.
@@ -318,12 +318,12 @@ static void read_input(lz_context *ctx, const char *name) {
 		fatal("unable to open '%s'", name);
 
 #	ifdef _WIN32
-	length = _filelength(_fileno(file));
+	length = _filelength(fileno(file));
 #	else
 	{
 		struct stat stat;
 		stat.st_size = 0;
-		fstat(_fileno(file), &stat);
+		fstat(fileno(file), &stat);
 		length = stat.st_size;
 	}
 #	endif
