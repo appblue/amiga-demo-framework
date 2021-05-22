@@ -1,0 +1,23 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_EXCMD	mixed	/number, pattern, mixed, or combineV2/
+!_TAG_OUTPUT_FILESEP	slash	/slash or backslash/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PATTERN_LENGTH_LIMIT	96	/0 for no limit/
+!_TAG_PROC_CWD	/home/kris/_amiga_/_work_/Planet-Rocklobster/tools/adftrack/	//
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	5.9.0	/p5.9.20210110.0/
+AddFile	adftrack.c	/^void AddFile( FileEntry& fileentry, unsigned char* buf, int& fileoffset )$/;"	f	typeref:typename:void
+BSwapInt	adftrack.c	/^unsigned int BSwapInt( unsigned int value )$/;"	f	typeref:typename:unsigned int
+BSwapIntArray	adftrack.c	/^void BSwapIntArray( unsigned int* values, int size )$/;"	f	typeref:typename:void
+FileEntry	adftrack.c	/^	FileEntry( char* filename )$/;"	f	struct:FileEntry	file:
+FileEntry	adftrack.c	/^	FileEntry()$/;"	f	struct:FileEntry	file:
+FileEntry	adftrack.c	/^struct FileEntry$/;"	s	file:
+PatchBootBlockCheckSum	adftrack.c	/^void PatchBootBlockCheckSum( unsigned char* buf )$/;"	f	typeref:typename:void
+filename	adftrack.c	/^	char*	filename;		\/\/ the filename$/;"	m	struct:FileEntry	typeref:typename:char *	file:
+main	adftrack.c	/^void main(int argc, char **argv)$/;"	f	typeref:typename:void
+numblocks	adftrack.c	/^	int		numblocks;		\/\/ the amount of blocks\/sectors the file occupies on disk.$/;"	m	struct:FileEntry	typeref:typename:int	file:
+startoffset	adftrack.c	/^	int		startoffset;	\/\/ the starting offset on disk in bytes$/;"	m	struct:FileEntry	typeref:typename:int	file:
+std	adftrack.c	/^using namespace std;$/;"	v	typeref:typename:using namespace
