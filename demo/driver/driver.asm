@@ -2,6 +2,8 @@
 ;	ifnd	track_only
 TRACK           =       1
 
+	include parts_map.i
+
 max_pts         = 5000		;morph_points
 SCR_WIDTH       = 40
 planesize	= SCR_WIDTH*256
@@ -17,12 +19,12 @@ call_part:	macro
 	endm
 
 start:
-; 	; copper effect 
-; 	lea		$dff180,a3
-; .lll
-; 	move.w	d0,(a3)
-; 	addq	#1,d0
-; 	bra.s   .lll
+	; copper effect 
+	lea		$dff180,a3
+.lll
+	move.w	d0,(a3)
+	addq	#1,d0
+	bra.s   .lll
 
 	lea     mem_addr(pc),a1
 	ifnd 	TRACK

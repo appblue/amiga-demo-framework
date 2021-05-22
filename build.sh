@@ -7,12 +7,26 @@ set -e
 (cd demo/copper; ./make.sh)
 (cd demo/driver; ./make.sh)
 
+echo "Pre-creating ADF File"
+./tools/adftrack/adftrack \
+    ./demo/bootblock/bootblock \
+    demo.adf \
+    map.i \
+   ./demo/driver/driver \
+   ./demo/tunnel/tunnel \
+   ./demo/copper/copper
+
+echo "Generating parts mapfile and regenerate driver"
+cat map.i | awk -F/ '{print $4}' > demo/includes/parts_map.i
+(cd demo/driver; ./make.sh)
+
 echo "Creating ADF File"
 ./tools/adftrack/adftrack \
     ./demo/bootblock/bootblock \
     demo.adf \
     map.i \
    ./demo/driver/driver \
+   ./demo/tunnel/tunnel \
    ./demo/copper/copper
 
 [ $? -ne 0 ] && exit

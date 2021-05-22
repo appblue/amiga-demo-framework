@@ -3,4 +3,7 @@ demo/bootblock/bootblock
 demo/copper/copper
 demo/copper/copper.o
 demo/driver/driver
+demo/tunnel/tunnel
+demo/tunnel/tunnel.d
+demo/tunnel/gelly.o
 tools/adftrack/adftrack
