@@ -1,8 +1,6 @@
 
 ;	ifnd	track_only
 
-
-
 max_pts         = 5000		;morph_points
 SCR_WIDTH       = 40
 planesize	= SCR_WIDTH*256
@@ -18,6 +16,13 @@ call_part:	macro
 	endm
 
 start:
+; 	; copper effect 
+; 	lea		$dff180,a3
+; .lll
+; 	move.w	d0,(a3)
+; 	addq	#1,d0
+; 	bra.s   .lll
+
 	lea     mem_addr(pc),a1
 	ifnd 	TRACK
 	lea     memory(pc),a0
@@ -64,7 +69,7 @@ bBegin:
 ;	move.w	#%1000001111000000,$96(a6)
 	move.w	#$83c0,$96(a6)
 
-	lea     w_sin_table(pc),a0
+	lea w_sin_table(pc),a0
 	lea	demo_ptrs(pc),a5
 	move.l	a0,w_sin(a5)
 
@@ -332,7 +337,7 @@ MEM_SIZE = 1000000
 	 include trackloader.s
 
         ifnd TRACK
-memory: blk.b   MEM_SIZE
+memory: rs.b   MEM_SIZE
         endif
 
 screen:	ds.b	planesize*2

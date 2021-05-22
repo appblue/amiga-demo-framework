@@ -10,8 +10,10 @@ set -x
 ./tools/adftrack/adftrack \
     ./demo/bootblock/bootblock \
     demo.adf \
-    ./demo/driver/driver \
+   ./demo/driver/driver \
     ./demo/copper/copper
+
+[ $? -ne 0 ] && exit
 
 FS_EXEC=/bin/fs-uae
 SYSTEM=$(uname -s)
