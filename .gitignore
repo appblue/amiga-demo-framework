@@ -1,0 +1,5 @@
+demo.adf
+demo/bootblock/bootblock
+demo/copper/copper
+demo/driver/driver
+**/*.o
