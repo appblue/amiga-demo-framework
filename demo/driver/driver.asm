@@ -18,13 +18,11 @@ call_part:	macro
 	endm
 
 start:
-
-        lea     mem_pool(pc),a1
-        ifnd TRACK
-        lea     memory(pc),a0
-        endif
-        move.l  a0,(a1)
-
+	lea     mem_addr(pc),a1
+	ifnd 	TRACK
+	lea     memory(pc),a0
+	endif
+	move.l  a0,(a1)
 
 	lea	bbegin(pc),a0
 	move.l	a0,$80.w
@@ -325,18 +323,17 @@ planes:	dc.w	$e0,0,$e2,0
 ************************************************************************
 
 ************************************************************************
+
 MEM_SIZE = 1000000
-
-        ifnd TRACK
-memory: blk.b   MEM_SIZE
-        endif
-
-
 
 	 include memory.s
 	 include process_hunks.s
          ; include incl/doynax.S
 	 include trackloader.s
+
+        ifnd TRACK
+memory: blk.b   MEM_SIZE
+        endif
 
 screen:	ds.b	planesize*2
 

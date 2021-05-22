@@ -69,7 +69,7 @@ AdkCon		Equ	$9500
 
 *­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­*
 
-Init		Lea	$dff000,a5		;customchip-base into a5
+Init	Lea	$dff000,a5				;customchip-base into a5
 
 		Move.b	$bfde00,CIA_B		;Save tmr A Control reg
 		Move.w	$2(a5),OldDMA		;save dma channels
@@ -82,7 +82,7 @@ Init		Lea	$dff000,a5		;customchip-base into a5
 		Bset	#7,oldintreq
 
 		Move.w	#$7fff,d1
-		Move.w	d1,$9a(a5)		;kill all interrupts
+		Move.w	d1,$9a(a5)			;kill all interrupts
 		Move.w	d1,$9c(a5)
 		Move.w	d1,$96(a5)
 
@@ -92,13 +92,13 @@ Init		Lea	$dff000,a5		;customchip-base into a5
 		Move.b	#%01001100,$bfde00	;Stop, one-shot mode.
 
 		Bsr.s	SelDF0MotOn
-		Bsr	GoToTrack00
-		Bsr	SelDF0MotOff
+		Bsr		GoToTrack00
+		Bsr		SelDF0MotOff
 		Rts
 
 *­-­-­-­-­-­-­-­-­-­-­-­-­-­-­-­-­-­-­-­-­-­-­-­*
 
-Exit		Move.w	OldDMA(pc),$96(a5)	;Restore old dma.
+Exit	Move.w	OldDMA(pc),$96(a5)	;Restore old dma.
 		Move.b	CIA_B(pc),$bfde00	;Restore tmr A Control reg.
 		Move.b	OldADKCON(pc),$9e(a5)
 		Move.w	oldintena(pc),$9a(a5)	;Restore old interrupt enable.
@@ -367,7 +367,7 @@ EndSector	Ds.b	1
 
 *­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­*
 
-	Section Track,BSS_C
+;	Section Track,BSS_C
 
 TrackBuffer	Ds.w	$1900		;Room for one MFM-track.
 
