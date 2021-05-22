@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# errors enc execution
 set -x
 
 (cd demo/bootblock; ./make.sh)
