@@ -1,5 +1,6 @@
 
 ;	ifnd	track_only
+TRACK           =       1
 
 max_pts         = 5000		;morph_points
 SCR_WIDTH       = 40
@@ -337,7 +338,7 @@ MEM_SIZE = 1000000
 	 include trackloader.s
 
         ifnd TRACK
-memory: rs.b   MEM_SIZE
+memory: ds.b   MEM_SIZE
         endif
 
 screen:	ds.b	planesize*2

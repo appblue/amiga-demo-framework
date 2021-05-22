@@ -7,12 +7,13 @@ set -e
 (cd demo/copper; ./make.sh)
 (cd demo/driver; ./make.sh)
 
+echo "Creating ADF File"
 ./tools/adftrack/adftrack \
-    ./demo/bootblock/bootblock \  # bootblock
-    demo.adf \                    # target ADF file
-    map.i \                       # maping files -> (start_block, size_in_block)
-   ./demo/driver/driver \         # first block of data/code
-    ./demo/copper/copper          # second block of data/code
+    ./demo/bootblock/bootblock \
+    demo.adf \
+    map.i \
+   ./demo/driver/driver \
+   ./demo/copper/copper
 
 [ $? -ne 0 ] && exit
 

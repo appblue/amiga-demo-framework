@@ -4,7 +4,7 @@
 #include <vector>
 #include <iostream>
 //#include <climits>
-#define ULONG_MAX 0xffffffff
+#define ULONG_MAX_32 0xffffffff
 
 using namespace std;
 
@@ -65,7 +65,7 @@ void PatchBootBlockCheckSum( unsigned char* buf )
 	for(i=0 ; i<256 ; i++) 
 	{
 		d=BSwapInt(buf2[i]);
-		if ( (ULONG_MAX-newsum) < d )	/* overflow */
+		if ( (ULONG_MAX_32-newsum) < d )	/* overflow */
 			newsum++; 
 
 		newsum+=d; 
