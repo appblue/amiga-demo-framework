@@ -13,7 +13,13 @@ set -x
     ./demo/driver/driver \
     ./demo/copper/copper
 
-fs-uae --chip_memory=4096 \
+FS_EXEC=/bin/fs-uae
+SYSTEM=$(uname -s)
+if [ "${SYSTEM}x" = "Darwinx" ]; then
+  FS_EXEC="/Applications/FS-UAE Launcher.app/Contents/FS-UAE.app/Contents/MacOS/fs-uae"
+fi
+
+"${FS_EXEC}" --chip_memory=4096 \
   --joystick_port_1=none \
   --amiga_model=A500 \
   --floppy_drive_0_sounds=off \
