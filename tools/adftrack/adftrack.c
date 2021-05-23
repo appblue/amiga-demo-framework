@@ -1,9 +1,8 @@
 #include <stdio.h>
 #include <string.h>
-//#include <process.h>
 #include <vector>
 #include <iostream>
-//#include <climits>
+
 #define ULONG_MAX_32 0xffffffff
 
 using namespace std;
