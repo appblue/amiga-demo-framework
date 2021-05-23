@@ -9,23 +9,20 @@
 using namespace std;
 
 // Structure for a file on disk
-struct FileEntry
-{
+struct FileEntry {
 	char*	filename;		// the filename
 	int		startoffset;	// the starting offset on disk in bytes
 	int		startblock;     // the starting offset on disk in blocks
 	int		numblocks;		// the amount of blocks/sectors the file occupies on disk.
 
-	FileEntry()
-	{
+	FileEntry() {
 		filename=0;
 		startoffset=-1;
 		startblock=-1;
 		numblocks=0;
 	}
 	
-	FileEntry( char* filename )
-	{
+	FileEntry( char* filename ) {
 		this->filename=filename;
 		this->startoffset=-1;
 		this->startblock=-1;
@@ -34,25 +31,21 @@ struct FileEntry
 };
 
 // Swaps endianess of an integer
-uint32_t BSwapInt( uint32_t value )
-{
+uint32_t BSwapInt( uint32_t value ) {
 	uint32_t value2=(value<<24) | ((value & 0xff00)<<8) | ((value & 0xff0000)>>8) | (value>>24);
 
 	return value2;
 }
 
 // Swaps endianess of an array of integers
-void BSwapIntArray( unsigned int* values, int size )
-{
-	for (int i=0 ; i<size ; i++)
-	{
+void BSwapIntArray( unsigned int* values, int size ) {
+	for (int i=0 ; i<size ; i++) {
 		values[i]=BSwapInt(values[i]);
 	}
 }
 
 // Calculate the checksum of the disk-bootblock and write it back to the disk-buffer
-void PatchBootBlockCheckSum( unsigned char* buf )
-{
+void PatchBootBlockCheckSum( unsigned char* buf ) {
 	int i;
 	uint32_t newsum, d;
 
@@ -62,8 +55,7 @@ void PatchBootBlockCheckSum( unsigned char* buf )
 
 	newsum=0;
 
-	for(i=0 ; i<256 ; i++) 
-	{
+	for(i=0 ; i<256 ; i++) {
 		d=BSwapInt(buf2[i]);
 		if ( (ULONG_MAX_32-newsum) < d )	/* overflow */
 			newsum++; 
@@ -77,16 +69,14 @@ void PatchBootBlockCheckSum( unsigned char* buf )
 }
 
 // Adds a file to the diskbuffer
-void AddFile( FileEntry& fileentry, unsigned char* buf, int& fileoffset )
-{
+void AddFile( FileEntry& fileentry, unsigned char* buf, int& fileoffset ) {
 	char* filename=fileentry.filename;
 
 	cout << "adding file: " << filename << endl;
 	
 	// open file
 	FILE* filer=fopen(filename, "rb");
-	if(!filer) 
-	{
+	if(!filer) {
 		printf("cannot open \"%s\"\n", filename);
 		exit(-1);
 	}
@@ -96,8 +86,7 @@ void AddFile( FileEntry& fileentry, unsigned char* buf, int& fileoffset )
 	int filesize=ftell(filer);
 	fseek(filer, 0, SEEK_SET);
 
-	if(filesize<=0) 
-	{
+	if(filesize<=0) {
 		printf("file \"%s\" is empty\n", filename);
 		exit(-1);
 	}
@@ -110,8 +99,7 @@ void AddFile( FileEntry& fileentry, unsigned char* buf, int& fileoffset )
 	// does the file fit onto the disk?
 	int fileendoffset=fileoffset+filesize_padded_to_blocks;
 	int freespace=901120-fileendoffset;
-	if (freespace<0)
-	{
+	if (freespace<0) {
 		printf("couldnt find space for file \"%s\" - disk full!\n", filename);
 		exit(-1);
 	}
@@ -149,11 +137,9 @@ void AddFile( FileEntry& fileentry, unsigned char* buf, int& fileoffset )
 ////////////////////////////////////////////////////
 // main function
 ////////////////////////////////////////////////////
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
 	// if not enough params, show usage info
-	if(argc < 3) 
-	{
+	if(argc < 3) {
 		printf("usage %s <bootblock> <outfile> <mapfile> [n <filenames>]\n", argv[0]);
         exit(-1);
 	}
@@ -165,8 +151,7 @@ int main(int argc, char **argv)
 
 	// open file containing bootblock
 	FILE* bootfile=fopen(bootname, "rb");
-	if(!bootfile) 
-	{
+	if(!bootfile) {
 		printf("cannot open \"%s\"\n", bootname);
 		exit(-1);
 	}
@@ -175,8 +160,7 @@ int main(int argc, char **argv)
 	fseek(bootfile, 0, SEEK_END);
 	int bootsize=ftell(bootfile);
 	fseek(bootfile, 0, SEEK_SET);
-	if (bootsize>1024)
-	{
+	if (bootsize>1024) {
 		printf("\"%s\" has wrong filesize. a valid bootblock must be <= 1024 bytes.\n", bootname);
 		exit(-1);
 	}
@@ -199,8 +183,7 @@ int main(int argc, char **argv)
 
 	int numfiles = argc - 4;
 
-	for (int i=0 ; i<numfiles ; i++)
-	{
+	for (int i=0 ; i<numfiles ; i++) {
 		files.push_back((char*)argv[ i + 4 ]);
 	}
 
@@ -208,8 +191,7 @@ int main(int argc, char **argv)
 	int fileoffset=3*512;
 
 	// add all files from the list to the diskbuffer
-	for (int i=0 ; i<numfiles ; i++)
-	{
+	for (int i=0 ; i<numfiles ; i++) {
 		AddFile(files[i], buf, fileoffset);
 	}
 
@@ -224,14 +206,12 @@ int main(int argc, char **argv)
 
 	// open file containing bootblock
 	FILE* mapfile=fopen(mapname, "w+");
-	if(!mapfile) 
-	{
+	if(!mapfile) {
 		printf("cannot open \"%s\"\n", mapname);
 		exit(-1);
 	}
 
-	for (int i=0 ; i<numfiles ; i++)
-	{
+	for (int i=0 ; i<numfiles ; i++) {
 		*mydirpoi++=(files[i].startblock);
 		*mydirpoi++=files[i].numblocks;
 		fprintf(mapfile, "%s_sblock = %d\n", files[i].filename, files[i].startblock);
@@ -251,8 +231,7 @@ int main(int argc, char **argv)
 	
 	// write the adf output file
 	FILE* filew=fopen(filewname, "wb");
-	if(!filew) 
-	{
+	if(!filew) {
 	 	printf("cannot open \"%s\"\n", filewname);
 		exit(-1);
 	}
