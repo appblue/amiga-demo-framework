@@ -7,3 +7,5 @@ demo/tunnel/tunnel
 demo/tunnel/tunnel.d
 demo/tunnel/gelly.o
 tools/adftrack/adftrack
+tools/doynamite68k/lz
+tools/doynamite68k/lz.exe

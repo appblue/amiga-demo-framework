@@ -3,7 +3,7 @@ Lempel-Ziv compressor by Johan "Doynax" Forsl�f.
 
 This is based on the 6502 Doynamite format, except with the encoding rearranged to take
 somewhat better advantage of the 68k architecture.
-
+ 
 Note that the scheme with a split input stream for odd literal bytes requires
 a significant safety buffer for forward in-place decompression (about 3% but
 dependent on the file to be processed)
